@@ -1,6 +1,7 @@
 package com.akhil.cameraxjavademo;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
@@ -15,7 +16,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -49,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getSupportActionBar().hide();
+
         mPreviewView = findViewById(R.id.previewView);
         captureImage = findViewById(R.id.captureImg);
 
@@ -57,6 +62,18 @@ public class MainActivity extends AppCompatActivity {
         } else{
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
         }
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    enterPictureInPictureMode();
+                }
+                else
+                    Toast.makeText(MainActivity.this, "PIP not available", Toast.LENGTH_SHORT).show();
+
+            }
+        },3000);
     }
 
     private void startCamera() {
@@ -167,4 +184,5 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
 }
